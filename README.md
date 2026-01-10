@@ -14,8 +14,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## Routes List
 
 ### Main Routes
-- `/` - App entry point (redirects to onboarding or dashboard)
-- `/onboarding` - User profile setup
+- `/` - App entry point (redirects to dashboard)
 
 ### App Routes (requires authentication)
 - `/app` - Dashboard with personalized suggestions
@@ -79,7 +78,7 @@ The dashboard displays the top 6 prioritized suggestions.
 This will:
 - Clear all existing data from LocalStorage
 - Load fresh seed data from `lib/mockData.ts`
-- Redirect you back to onboarding
+- Redirect you back to the dashboard
 
 Alternatively, you can reset data programmatically:
 ```typescript
@@ -98,7 +97,6 @@ const seedData = createSeedData();
 src/
   app/
     page.tsx                      # Entry point with redirect logic
-    onboarding/page.tsx           # Profile setup
     app/(shell)/                  # Protected app routes
       layout.tsx                  # App shell with sidebar/topbar
       page.tsx                    # Dashboard
@@ -140,7 +138,7 @@ src/
 
 ## Features
 
-- ✅ User profile and onboarding
+- ✅ User profile with seed data initialization
 - ✅ Contact management with relationships and interests
 - ✅ Event tracking (birthdays, anniversaries, holidays, custom)
 - ✅ Gift plan creation with budget tracking and ideas

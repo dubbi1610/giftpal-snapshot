@@ -69,7 +69,7 @@ export default function SettingsPage() {
     seedData.wishlists.forEach(w => wishlistsRepo.create(w));
     seedData.wishlistItems.forEach(item => itemsRepo.create(item));
     seedData.history.forEach(h => historyRepo.create(h));
-    router.push('/onboarding');
+    router.push('/app');
   };
 
   const handleUpdateProfile = (e: React.FormEvent) => {
@@ -194,7 +194,7 @@ export default function SettingsPage() {
         }
       >
         <p className="text-sm text-slate-600">
-          Are you sure you want to reset all data? This will clear everything and load demo data. You will need to go through onboarding again.
+          Are you sure you want to reset all data? This will clear everything and load demo data. You will be redirected to the dashboard.
         </p>
       </Modal>
     </div>

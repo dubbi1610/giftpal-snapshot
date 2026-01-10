@@ -46,3 +46,9 @@ next-env.d.ts
 Library/
 Pictures/
 .Trash/
+
+# Local Node.js installation
+nodejs-local/
+
+# Startup script (can be committed, but optional)
+# start.sh

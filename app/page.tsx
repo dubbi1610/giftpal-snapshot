@@ -15,13 +15,9 @@ export default function Home() {
 
   useEffect(() => {
     if (!isLoading) {
-      if (user) {
-        router.push('/app');
-      } else {
-        router.push('/onboarding');
-      }
+      router.push('/app');
     }
-  }, [user, isLoading, router]);
+  }, [isLoading, router]);
 
   return (
     <div className="flex min-h-screen items-center justify-center">

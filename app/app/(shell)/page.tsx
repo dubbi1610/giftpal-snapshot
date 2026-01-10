@@ -48,7 +48,7 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Sparkles className="h-5 w-5" />
-              Gift Radar
+              Personalized Gift Idea
             </CardTitle>
             <CardDescription>Personalized suggestions for you</CardDescription>
           </CardHeader>
