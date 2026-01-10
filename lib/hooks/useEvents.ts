@@ -9,6 +9,7 @@ export function useEvents() {
   return useQuery({
     queryKey: ['events'],
     queryFn: () => api.listEvents(),
+    enabled: typeof window !== 'undefined',
   });
 }
 
@@ -17,7 +18,7 @@ export function useEvent(id: string) {
   return useQuery({
     queryKey: ['events', id],
     queryFn: () => api.getEvent(id),
-    enabled: !!id,
+    enabled: typeof window !== 'undefined' && !!id,
   });
 }
 
@@ -26,7 +27,7 @@ export function useEventsByContact(contactId: string) {
   return useQuery({
     queryKey: ['events', 'contact', contactId],
     queryFn: () => api.getEventsByContact(contactId),
-    enabled: !!contactId,
+    enabled: typeof window !== 'undefined' && !!contactId,
   });
 }
 

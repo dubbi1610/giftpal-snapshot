@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useApi } from '@/lib/hooks/useApi';
+import { useCreateUser } from '@/lib/hooks/useUser';
 import { generateId } from '@/lib/utils/id';
+import { seedDemoData } from '@/lib/storage/init';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
@@ -24,7 +25,7 @@ type OnboardingForm = z.infer<typeof onboardingSchema>;
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const api = useApi();
+  const createUser = useCreateUser();
   const [formData, setFormData] = useState({
     name: '',
     defaultBudgetMin: 25,
@@ -66,21 +67,35 @@ export default function OnboardingPage() {
       topRelationships: result.data.topRelationships,
       createdAt: new Date().toISOString(),
     };
-    api.updateUser(user as any);
-    router.push('/app');
+    createUser.mutate(user, {
+      onSuccess: () => {
+        // Seed demo data after user is created
+        setTimeout(() => {
+          seedDemoData();
+        }, 100);
+        router.push('/app');
+      },
+    });
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-      <Card className="w-full max-w-2xl">
-        <CardHeader>
-          <div className="flex items-center gap-3 mb-2">
-            <Gift className="h-6 w-6 text-slate-900" />
-            <CardTitle className="text-2xl">Welcome to GiftPal</CardTitle>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-12 px-4">
+      <div className="mx-auto max-w-2xl">
+        <div className="mb-8 text-center">
+          <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-glow">
+            <Gift className="h-8 w-8 text-white" />
           </div>
-          <CardDescription>Let&apos;s set up your profile to get started</CardDescription>
-        </CardHeader>
-        <CardContent>
+          <h1 className="mb-2 text-4xl font-bold text-slate-900">
+            Welcome to <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">GiftPal</span>
+          </h1>
+          <p className="text-lg text-slate-600">Let&apos;s set up your profile to get started</p>
+        </div>
+        <Card className="w-full shadow-xl border-purple-100">
+          <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-t-lg border-b border-purple-100">
+            <CardTitle className="text-2xl">Profile Setup</CardTitle>
+            <CardDescription>Tell us about yourself to personalize your experience</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
           <form onSubmit={onSubmit} className="space-y-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
@@ -158,10 +173,10 @@ export default function OnboardingPage() {
                     key={rel}
                     type="button"
                     onClick={() => toggleRelationship(rel)}
-                    className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                    className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                       formData.topRelationships.includes(rel)
-                        ? 'bg-slate-900 text-white'
-                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                        ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white shadow-md scale-105'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 hover:scale-105'
                     }`}
                   >
                     {rel.charAt(0).toUpperCase() + rel.slice(1)}
@@ -173,14 +188,28 @@ export default function OnboardingPage() {
               )}
             </div>
 
-            <div className="flex justify-end gap-3 pt-4">
-              <Button type="submit" size="lg">
-                Get Started
+            <div className="flex justify-end gap-3 pt-6 border-t border-slate-200">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => router.push('/')}
+              >
+                Back
+              </Button>
+              <Button
+                type="submit"
+                variant="gradient"
+                size="lg"
+                disabled={createUser.isPending}
+                className="shadow-glow"
+              >
+                {createUser.isPending ? 'Creating Profile...' : 'Get Started'}
               </Button>
             </div>
           </form>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

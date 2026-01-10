@@ -12,6 +12,7 @@ import type {
 export interface GiftPalAPI {
   // User
   getUser(): UserProfile | null;
+  createUser(user: UserProfile): UserProfile;
   updateUser(updates: Partial<UserProfile>): UserProfile | null;
   deleteUser(): void;
 

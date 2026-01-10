@@ -11,6 +11,10 @@ export function createLocalApi(): GiftPalAPI {
   return {
     // User
     getUser: () => userRepo.get(),
+    createUser: (user) => {
+      userRepo.set(user);
+      return user;
+    },
     updateUser: (updates) => userRepo.update(updates),
     deleteUser: () => userRepo.delete(),
 

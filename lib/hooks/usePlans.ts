@@ -9,6 +9,7 @@ export function usePlans() {
   return useQuery({
     queryKey: ['plans'],
     queryFn: () => api.listPlans(),
+    enabled: typeof window !== 'undefined',
   });
 }
 
@@ -17,7 +18,7 @@ export function usePlan(id: string) {
   return useQuery({
     queryKey: ['plans', id],
     queryFn: () => api.getPlan(id),
-    enabled: !!id,
+    enabled: typeof window !== 'undefined' && !!id,
   });
 }
 
@@ -26,7 +27,7 @@ export function usePlansByContact(contactId: string) {
   return useQuery({
     queryKey: ['plans', 'contact', contactId],
     queryFn: () => api.getPlansByContact(contactId),
-    enabled: !!contactId,
+    enabled: typeof window !== 'undefined' && !!contactId,
   });
 }
 
@@ -35,7 +36,7 @@ export function usePlansByEvent(eventId: string) {
   return useQuery({
     queryKey: ['plans', 'event', eventId],
     queryFn: () => api.getPlansByEvent(eventId),
-    enabled: !!eventId,
+    enabled: typeof window !== 'undefined' && !!eventId,
   });
 }
 

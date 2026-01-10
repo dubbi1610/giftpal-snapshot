@@ -20,6 +20,6 @@ export function useSuggestions() {
   return useQuery({
     queryKey: ['suggestions', user?.id, contacts.length, events.length, plans.length, history.length],
     queryFn: () => generateSuggestions(user || null, contacts, events, plans, history),
-    enabled: !!user,
+    enabled: typeof window !== 'undefined' && !!user,
   });
 }

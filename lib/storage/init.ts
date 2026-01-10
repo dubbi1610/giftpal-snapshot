@@ -12,19 +12,26 @@ export function initializeStorage() {
   if (typeof window === 'undefined') return;
 
   if (needsMigration()) {
-    // Check if user exists - if not, seed data
-    if (!userRepo.exists()) {
-      const seedData = createSeedData();
-      
-      userRepo.set(seedData.user);
-      seedData.contacts.forEach(c => contactsRepo.create(c));
-      seedData.events.forEach(e => eventsRepo.create(e));
-      seedData.plans.forEach(p => plansRepo.create(p));
-      seedData.wishlists.forEach(w => wishlistsRepo.create(w));
-      seedData.wishlistItems.forEach(item => itemsRepo.create(item));
-      seedData.history.forEach(h => historyRepo.create(h));
-    }
-    
+    // Just set the version - don't auto-seed
+    // Seed data will be created after onboarding or via settings reset
     setStorageVersion(STORAGE_VERSION);
+  }
+}
+
+export function seedDemoData() {
+  if (typeof window === 'undefined') return;
+
+  // Only seed if contacts/events don't exist (user might exist from onboarding)
+  const existingContacts = contactsRepo.getAll();
+  if (existingContacts.length === 0) {
+    const seedData = createSeedData();
+    
+    // Don't overwrite user if it exists - just seed the demo data
+    seedData.contacts.forEach(c => contactsRepo.create(c));
+    seedData.events.forEach(e => eventsRepo.create(e));
+    seedData.plans.forEach(p => plansRepo.create(p));
+    seedData.wishlists.forEach(w => wishlistsRepo.create(w));
+    seedData.wishlistItems.forEach(item => itemsRepo.create(item));
+    seedData.history.forEach(h => historyRepo.create(h));
   }
 }

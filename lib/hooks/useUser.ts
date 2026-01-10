@@ -8,7 +8,23 @@ export function useUser() {
   const api = useApi();
   return useQuery({
     queryKey: ['user'],
-    queryFn: () => api.getUser(),
+    queryFn: () => Promise.resolve(api.getUser()),
+    enabled: typeof window !== 'undefined',
+    staleTime: Infinity,
+    retry: false,
+  });
+}
+
+export function useCreateUser() {
+  const api = useApi();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (user: UserProfile) => {
+      return Promise.resolve(api.createUser(user));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
   });
 }
 

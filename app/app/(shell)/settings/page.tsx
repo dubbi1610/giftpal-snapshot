@@ -14,13 +14,7 @@ import { downloadJSON } from '@/lib/utils/download';
 import { Settings, Download, RotateCcw, User } from 'lucide-react';
 import type { GiftingStyle } from '@/lib/types';
 import { resetStorage } from '@/lib/storage/storage';
-import { createSeedData } from '@/lib/mockData';
-import { userRepo } from '@/lib/storage/repositories/userRepo';
-import { contactsRepo } from '@/lib/storage/repositories/contactsRepo';
-import { eventsRepo } from '@/lib/storage/repositories/eventsRepo';
-import { plansRepo } from '@/lib/storage/repositories/plansRepo';
-import { wishlistsRepo, itemsRepo } from '@/lib/storage/repositories/wishlistsRepo';
-import { historyRepo } from '@/lib/storage/repositories/historyRepo';
+import { seedDemoData } from '@/lib/storage/init';
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -61,15 +55,9 @@ export default function SettingsPage() {
 
   const handleReset = () => {
     resetStorage();
-    const seedData = createSeedData();
-    userRepo.set(seedData.user);
-    seedData.contacts.forEach(c => contactsRepo.create(c));
-    seedData.events.forEach(e => eventsRepo.create(e));
-    seedData.plans.forEach(p => plansRepo.create(p));
-    seedData.wishlists.forEach(w => wishlistsRepo.create(w));
-    seedData.wishlistItems.forEach(item => itemsRepo.create(item));
-    seedData.history.forEach(h => historyRepo.create(h));
-    router.push('/onboarding');
+    // Clear everything and redirect to onboarding
+    // User will create new profile, then demo data will seed
+    router.push('/');
   };
 
   const handleUpdateProfile = (e: React.FormEvent) => {

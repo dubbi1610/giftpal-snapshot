@@ -9,6 +9,7 @@ export function useHistory() {
   return useQuery({
     queryKey: ['history'],
     queryFn: () => api.listHistory(),
+    enabled: typeof window !== 'undefined',
   });
 }
 
@@ -17,7 +18,7 @@ export function useHistoryByContact(contactId: string) {
   return useQuery({
     queryKey: ['history', 'contact', contactId],
     queryFn: () => api.getHistoryByContact(contactId),
-    enabled: !!contactId,
+    enabled: typeof window !== 'undefined' && !!contactId,
   });
 }
 
@@ -26,6 +27,7 @@ export function useHistoryByDirection(direction: 'given' | 'received') {
   return useQuery({
     queryKey: ['history', 'direction', direction],
     queryFn: () => api.getHistoryByDirection(direction),
+    enabled: typeof window !== 'undefined',
   });
 }
 

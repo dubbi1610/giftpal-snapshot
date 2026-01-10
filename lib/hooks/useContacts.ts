@@ -9,6 +9,7 @@ export function useContacts() {
   return useQuery({
     queryKey: ['contacts'],
     queryFn: () => api.listContacts(),
+    enabled: typeof window !== 'undefined',
   });
 }
 
@@ -17,7 +18,7 @@ export function useContact(id: string) {
   return useQuery({
     queryKey: ['contacts', id],
     queryFn: () => api.getContact(id),
-    enabled: !!id,
+    enabled: typeof window !== 'undefined' && !!id,
   });
 }
 

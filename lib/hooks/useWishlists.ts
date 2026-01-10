@@ -9,6 +9,7 @@ export function useWishlists() {
   return useQuery({
     queryKey: ['wishlists'],
     queryFn: () => api.listWishlists(),
+    enabled: typeof window !== 'undefined',
   });
 }
 
@@ -17,7 +18,7 @@ export function useWishlist(id: string) {
   return useQuery({
     queryKey: ['wishlists', id],
     queryFn: () => api.getWishlist(id),
-    enabled: !!id,
+    enabled: typeof window !== 'undefined' && !!id,
   });
 }
 
@@ -26,7 +27,7 @@ export function useWishlistByToken(token: string) {
   return useQuery({
     queryKey: ['wishlists', 'token', token],
     queryFn: () => api.getWishlistByToken(token),
-    enabled: !!token,
+    enabled: typeof window !== 'undefined' && !!token,
   });
 }
 
@@ -35,7 +36,7 @@ export function useWishlistsByContact(contactId: string) {
   return useQuery({
     queryKey: ['wishlists', 'contact', contactId],
     queryFn: () => api.getWishlistsByContact(contactId),
-    enabled: !!contactId,
+    enabled: typeof window !== 'undefined' && !!contactId,
   });
 }
 
@@ -84,7 +85,7 @@ export function useWishlistItems(wishlistId: string) {
   return useQuery({
     queryKey: ['wishlist-items', wishlistId],
     queryFn: () => api.listWishlistItems(wishlistId),
-    enabled: !!wishlistId,
+    enabled: typeof window !== 'undefined' && !!wishlistId,
   });
 }
 
