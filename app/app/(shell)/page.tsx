@@ -5,6 +5,7 @@ import { useEvents } from '@/lib/hooks/useEvents';
 import { usePlans } from '@/lib/hooks/usePlans';
 import { useHistory } from '@/lib/hooks/useHistory';
 import { useSuggestions } from '@/lib/hooks/useSuggestions';
+import { useUser } from '@/lib/hooks/useUser';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -14,8 +15,16 @@ import { formatCurrencyRange } from '@/lib/utils/money';
 import { Plus, Calendar, Gift, History, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 18) return 'Good afternoon';
+  return 'Good evening';
+}
+
 export default function DashboardPage() {
   const router = useRouter();
+  const { data: user, isLoading: userLoading } = useUser();
   const { data: events = [], isLoading: eventsLoading } = useEvents();
   const { data: plans = [], isLoading: plansLoading } = usePlans();
   const { data: history = [], isLoading: historyLoading } = useHistory();
@@ -36,11 +45,27 @@ export default function DashboardPage() {
 
   const topSuggestions = suggestions.slice(0, 6);
 
+  const greeting = getGreeting();
+  const firstName = user?.name?.split(' ')[0] || 'there';
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-        <p className="text-sm text-slate-500 mt-1">Welcome back! Here&apos;s what&apos;s coming up.</p>
+        {userLoading ? (
+          <>
+            <Skeleton className="h-8 w-64 mb-2" />
+            <Skeleton className="h-4 w-96" />
+          </>
+        ) : (
+          <>
+            <h1 className="text-2xl font-bold text-slate-900">
+              {greeting}, {firstName}! 👋
+            </h1>
+            <p className="text-sm text-slate-500 mt-1">
+              Welcome back! Here&apos;s what&apos;s coming up for you.
+            </p>
+          </>
+        )}
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -48,9 +73,11 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Sparkles className="h-5 w-5" />
-              Gift Radar
+              Personalized Gift Idea
             </CardTitle>
-            <CardDescription>Personalized suggestions for you</CardDescription>
+            <CardDescription>
+              {user?.name ? `Personalized suggestions for ${firstName}` : 'Personalized suggestions for you'}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {suggestionsLoading ? (
@@ -63,7 +90,7 @@ export default function DashboardPage() {
               <EmptyState
                 icon={Sparkles}
                 title="No suggestions yet"
-                description="Add contacts and events to get personalized gift suggestions"
+                description={`Add contacts and events to get personalized gift suggestions${firstName !== 'there' ? `, ${firstName}` : ''}`}
               />
             ) : (
               <div className="space-y-3">
@@ -107,7 +134,7 @@ export default function DashboardPage() {
               <EmptyState
                 icon={Calendar}
                 title="No upcoming events"
-                description="Add events to keep track of important dates"
+                description={`Add events to keep track of important dates${firstName !== 'there' ? `, ${firstName}` : ''}`}
                 action={{
                   label: 'Add Event',
                   onClick: () => router.push('/app/events/new'),
@@ -153,7 +180,7 @@ export default function DashboardPage() {
               <EmptyState
                 icon={Gift}
                 title="No active plans"
-                description="Create a gift plan to start organizing your gifts"
+                description={`Create a gift plan to start organizing your gifts${firstName !== 'there' ? `, ${firstName}` : ''}`}
                 action={{
                   label: 'Create Plan',
                   onClick: () => router.push('/app/planner/new'),
@@ -197,7 +224,7 @@ export default function DashboardPage() {
               <EmptyState
                 icon={History}
                 title="No gift history"
-                description="Start logging gifts to track your giving"
+                description={`Start logging gifts to track your giving${firstName !== 'there' ? `, ${firstName}` : ''}`}
                 action={{
                   label: 'Log Gift',
                   onClick: () => router.push('/app/history'),

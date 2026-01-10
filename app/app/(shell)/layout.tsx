@@ -14,11 +14,7 @@ export default function AppLayout({
   const router = useRouter();
   const { data: user, isLoading } = useUser();
 
-  useEffect(() => {
-    if (!isLoading && !user) {
-      router.push('/onboarding');
-    }
-  }, [user, isLoading, router]);
+  // User is created via seed data on initialization, so no redirect needed
 
   if (isLoading) {
     return (

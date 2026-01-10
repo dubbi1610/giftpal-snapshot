@@ -182,7 +182,7 @@ export default function SettingsPage() {
         }
       >
         <p className="text-sm text-slate-600">
-          Are you sure you want to reset all data? This will clear everything and load demo data. You will need to go through onboarding again.
+          Are you sure you want to reset all data? This will clear everything and load demo data. You will be redirected to the dashboard.
         </p>
       </Modal>
     </div>
