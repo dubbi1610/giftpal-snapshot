@@ -4,17 +4,50 @@ A fully functioning web application for managing contacts, events, gift plans, w
 
 ## Getting Started
 
+### Prerequisites
+
+- Node.js 18+ and npm/pnpm
+- A Supabase project (for authentication)
+
+### Setup
+
+1. Install dependencies:
 ```bash
 npm install
+```
+
+2. Set up environment variables:
+   - Copy `.env.example` to `.env.local`
+   - Fill in your Supabase credentials:
+     - `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
+     - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+
+3. Run the development server:
+```bash
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+### Supabase Setup
+
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Go to Settings > API to find your project URL and anonymous key
+3. Enable Email Auth in Authentication > Providers
+4. Configure email templates in Authentication > Email Templates (optional)
+5. Add your site URL to Authentication > URL Configuration (for redirects)
+
 ## Routes List
 
+### Auth Routes
+- `/login` - Sign in page
+- `/signup` - Create account page
+- `/forgot-password` - Password reset request page
+- `/verify` - Email verification and password reset confirmation
+- `/logout` - Sign out handler (redirects to home)
+
 ### Main Routes
-- `/` - App entry point (redirects to dashboard)
+- `/` - Landing page
 
 ### App Routes (requires authentication)
 - `/app` - Dashboard with personalized suggestions
@@ -134,7 +167,9 @@ src/
 - **Zod** (validation)
 - **lucide-react** (SVG icons)
 - **date-fns** (date utilities)
-- **LocalStorage** (persistence)
+- **Supabase Auth** (authentication)
+- **@supabase/ssr** (server-side auth)
+- **LocalStorage** (persistence for app data)
 
 ## Features
 
@@ -150,7 +185,8 @@ src/
 
 ## Notes
 
-- All data is stored in LocalStorage (client-side only)
-- No authentication - demo mode with local persistence
+- Authentication is handled via Supabase Auth (email/password with email verification)
+- App data (contacts, events, plans, etc.) is stored in LocalStorage (client-side only)
+- After signup/login, if no local profile exists, users are redirected to `/onboarding` to create one
 - Responsive design optimized for 390px+ width
 - No emojis used - SVG icons only (lucide-react)
