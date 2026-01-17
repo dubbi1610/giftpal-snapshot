@@ -56,10 +56,11 @@ export async function middleware(request: NextRequest) {
       },
     });
 
-    // Refresh session if expired
+    // Refresh session and read cookies - this ensures newly set cookies after login are properly read
     const {
-      data: { user },
-    } = await supabase.auth.getUser();
+      data: { session },
+    } = await supabase.auth.getSession();
+    const user = session?.user ?? null;
 
     // Protect /app/* routes
     if (request.nextUrl.pathname.startsWith('/app')) {
