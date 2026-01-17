@@ -7,16 +7,22 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
+  try {
+    const supabase = await createClient();
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
 
-  if (error || !user) {
+    if (error || !user) {
+      redirect('/login?redirect=/app');
+    }
+
+    return <AppLayoutClient>{children}</AppLayoutClient>;
+  } catch (error: any) {
+    // If there's an error (e.g., missing env vars), redirect to login
+    console.error('App layout error:', error);
     redirect('/login?redirect=/app');
   }
-
-  return <AppLayoutClient>{children}</AppLayoutClient>;
 }
