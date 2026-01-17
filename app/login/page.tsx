@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect } from 'react';
+import { useActionState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from '@/lib/auth/actions';
 import { AuthCard } from '@/components/auth/AuthCard';
@@ -11,12 +11,12 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import AuthLayout from '@/app/(auth)/layout';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect');
 
-  const [state, formAction, pending] = useActionState(signIn, { error: null, success: false });
+  const [state, formAction, pending] = useActionState(signIn, { error: null as string | null, success: false });
 
   return (
     <AuthLayout>
@@ -76,7 +76,7 @@ export default function LoginPage() {
               Forgot password?
             </Link>
             <span className="text-slate-600">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link
                 href="/signup"
                 className="text-purple-600 hover:text-purple-700 hover:underline font-medium"
@@ -88,5 +88,25 @@ export default function LoginPage() {
         </form>
       </AuthCard>
     </AuthLayout>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <AuthLayout>
+        <AuthCard
+          title="Welcome back"
+          subtitle="Sign in to continue planning gifts."
+        >
+          <div className="text-center py-4">
+            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-purple-600 mx-auto" />
+            <p className="text-sm text-slate-500">Loading...</p>
+          </div>
+        </AuthCard>
+      </AuthLayout>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { AuthCard } from '@/components/auth/AuthCard';
@@ -9,7 +9,7 @@ import { FormSuccess } from '@/components/auth/FormSuccess';
 import { Button } from '@/components/ui/button';
 import AuthLayout from '@/app/(auth)/layout';
 
-export default function VerifyPage() {
+function VerifyContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
@@ -115,5 +115,25 @@ export default function VerifyPage() {
         )}
       </AuthCard>
     </AuthLayout>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={
+      <AuthLayout>
+        <AuthCard
+          title="Check your email"
+          subtitle="Verifying..."
+        >
+          <div className="text-center py-4">
+            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-purple-600 mx-auto" />
+            <p className="text-sm text-slate-500">Loading...</p>
+          </div>
+        </AuthCard>
+      </AuthLayout>
+    }>
+      <VerifyContent />
+    </Suspense>
   );
 }
