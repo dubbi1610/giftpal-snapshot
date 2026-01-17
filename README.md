@@ -17,10 +17,11 @@ npm install
 ```
 
 2. Set up environment variables:
-   - Copy `.env.example` to `.env.local`
+   - Create a `.env.local` file in the root directory (copy from `.env.example` if it exists)
    - Fill in your Supabase credentials:
      - `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
      - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+     - `NEXT_PUBLIC_SITE_URL` - Your site URL (defaults to `http://localhost:3000` for development)
 
 3. Run the development server:
 ```bash
@@ -34,8 +35,26 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 1. Create a new project at [supabase.com](https://supabase.com)
 2. Go to Settings > API to find your project URL and anonymous key
 3. Enable Email Auth in Authentication > Providers
-4. Configure email templates in Authentication > Email Templates (optional)
-5. Add your site URL to Authentication > URL Configuration (for redirects)
+   - Go to Authentication > Providers
+   - Enable "Email" provider
+   - Configure email settings as needed
+
+4. Configure Redirect URLs (Authentication > URL Configuration):
+   - Add `http://localhost:3000/verify*` for development
+   - Add `https://yourdomain.com/verify*` for production
+   - Add `https://*.vercel.app/verify*` for Vercel preview deployments (optional)
+
+5. Configure Email Templates (Authentication > Email Templates):
+   - **Confirm signup**: Use `{{ .ConfirmationURL }}` in the template
+   - **Reset password**: Use `{{ .ConfirmationURL }}` in the template
+
+6. Enable Email Verification:
+   - Go to Authentication > Settings
+   - Ensure "Confirm email" is enabled (required for email verification flow)
+
+7. (Optional) Configure SMTP:
+   - Go to Authentication > Settings > SMTP Settings
+   - Configure custom SMTP server or use Supabase default email service
 
 ## Routes List
 
@@ -43,7 +62,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - `/login` - Sign in page
 - `/signup` - Create account page
 - `/forgot-password` - Password reset request page
-- `/verify` - Email verification and password reset confirmation
+- `/verify` - Email verification and password reset confirmation (handles tokens from email links)
+- `/reset-password` - Set new password after password reset (requires valid reset token)
 - `/logout` - Sign out handler (redirects to home)
 
 ### Main Routes
@@ -183,10 +203,36 @@ src/
 - ✅ Export data as JSON
 - ✅ Reset demo data functionality
 
+## Authentication Flow
+
+### Signup Flow
+1. User creates account at `/signup`
+2. Supabase sends email verification link
+3. User clicks link, redirected to `/verify`
+4. Email is verified, user redirected to `/onboarding` (or `/app` if profile exists)
+
+### Login Flow
+1. User signs in at `/login`
+2. If email not verified, error message displayed
+3. On success, user redirected to `/app` (or `redirect` parameter if provided)
+
+### Password Reset Flow
+1. User requests reset at `/forgot-password`
+2. Supabase sends password reset email with link
+3. User clicks link, redirected to `/verify?type=recovery`
+4. Token verified, user redirected to `/reset-password?token=...`
+5. User sets new password, redirected to `/login`
+
+### Email Verification
+- Email verification tokens are handled automatically via Supabase email links
+- Tokens are processed at `/verify` page
+- On success, user is redirected to appropriate page (onboarding or app)
+
 ## Notes
 
 - Authentication is handled via Supabase Auth (email/password with email verification)
 - App data (contacts, events, plans, etc.) is stored in LocalStorage (client-side only)
 - After signup/login, if no local profile exists, users are redirected to `/onboarding` to create one
+- Password reset and email verification require `NEXT_PUBLIC_SITE_URL` environment variable for proper redirect URLs
 - Responsive design optimized for 390px+ width
 - No emojis used - SVG icons only (lucide-react)
