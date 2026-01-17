@@ -16,7 +16,7 @@ The code has been successfully pushed to: **https://github.com/rohan2207/GIFTPAL
 6. Click "Deploy"
 7. Your app will be live at: `https://giftpal.vercel.app` (or a custom domain)
 
-> **Important:** After deployment, configure environment variables (see "Environment Variables" section below)
+**No environment variables needed** - app uses LocalStorage (client-side only)
 
 ### Option 2: Netlify
 
@@ -70,78 +70,7 @@ Then deploy to any container hosting (Railway, Render, Fly.io, etc.)
 
 ## Environment Variables
 
-GiftPal requires Supabase environment variables for authentication. Configure these in Vercel Dashboard:
-
-### Configuration Steps
-
-1. **Access Environment Variables:**
-   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
-   - Select your GiftPal project
-   - Navigate to **Settings** → **Environment Variables**
-
-2. **Add Variables for Each Environment:**
-   You need to add each variable separately for **Production**, **Preview**, and **Development** environments.
-
-   **Required Variables:**
-   
-   **`NEXT_PUBLIC_SUPABASE_URL`** (required)
-   - **Description:** Your Supabase project URL
-   - **How to find:** 
-     - Go to [Supabase Dashboard](https://app.supabase.com)
-     - Select your project
-     - Navigate to **Settings** → **API**
-     - Copy the **Project URL**
-   - **Example:** `https://xxxxxxxxxxxxx.supabase.co`
-   - **Environments:** Add to Production, Preview, and Development
-   
-   **`NEXT_PUBLIC_SUPABASE_ANON_KEY`** (required)
-   - **Description:** Your Supabase anonymous/public API key
-   - **How to find:**
-     - In Supabase Dashboard → **Settings** → **API**
-     - Under **Project API keys**, find the `anon` `public` key
-     - Click the copy icon to copy the key
-   - **Example:** `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
-   - **Environments:** Add to Production, Preview, and Development
-   
-   **`NEXT_PUBLIC_SITE_URL`** (optional)
-   - **Description:** Your deployed site URL, used for password recovery email redirects
-   - **Value:** Your production URL (e.g., `https://giftpal.vercel.app` or your custom domain)
-   - **Default:** If not set, defaults to `http://localhost:3000`
-   - **Environments:** 
-     - **Production:** Set to your production URL
-     - **Preview:** Set to your preview URL (or use production URL)
-     - **Development:** Can be omitted (will use localhost default)
-
-3. **Adding Each Variable:**
-   - Click the **"Add New"** button
-   - Enter the **Key** (variable name)
-   - Enter the **Value**
-   - Select the target environments using the checkboxes:
-     - ☑ Production
-     - ☑ Preview  
-     - ☑ Development
-   - Click **"Save"**
-   - Repeat steps above for each variable
-
-4. **Redeploy After Configuration:**
-   Environment variable changes **require a redeployment** to take effect:
-   
-   **Option A: Redeploy from Dashboard**
-   - Go to **Deployments** tab
-   - Click the **"⋯"** (three dots menu) on your latest deployment
-   - Select **"Redeploy"**
-   - Confirm the redeployment
-   
-   **Option B: Trigger via Git Push**
-   - Make any change to your repository (even a small commit)
-   - Push to your connected branch
-   - Vercel will automatically redeploy with new environment variables
-
-5. **Verify Configuration:**
-   - After redeployment, check the deployment logs to ensure build succeeded
-   - Test authentication features (signup, login, password reset) to confirm Supabase is connected
-
-> **Finding Supabase Credentials:** See the "Supabase Setup" section in [README.md](README.md) for detailed instructions on creating a Supabase project and locating your credentials.
+**None required!** The app uses LocalStorage for persistence, so it works entirely client-side.
 
 ## Post-Deployment
 
